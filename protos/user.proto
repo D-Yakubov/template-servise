@@ -8,6 +8,7 @@ service UserService {
     rpc GetUser(User) returns (User);
     rpc DeleteUser(User) returns (Xabar);
     rpc UpdateUser(User) returns (Xabar);
+    rpc Search (SearchUser) returns (User);
 }
 
 message User {
@@ -18,7 +19,10 @@ message User {
     string location = 5;
     string phone = 6;
 }
-
+message SearchUser {
+    string search = 1;
+    string text = 2;
+}
 message ListUserRequest {
     int64 limit = 1;
     int64 page = 2;

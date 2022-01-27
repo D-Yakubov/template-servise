@@ -1,8 +1,10 @@
 package postgres
 
 import (
-	"github.com/jmoiron/sqlx"
+	"fmt"
 	pb "khusniddin/template-servise/genproto"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type userRepo struct {
@@ -106,4 +108,77 @@ func (r *userRepo) UpdateUser(user *pb.User) (*pb.Xabar, error) {
 		return nil, err
 	}
 	return &pb.Xabar{Message: "Ok!"}, nil
+}
+
+func (r *userRepo) Search(user *pb.SearchUser) (*pb.User, error) {
+	userr := pb.User{}
+	user.Text += "%"
+	if user.Search == "first_name" {
+		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE first_name  LIKE $1`
+		err := r.db.QueryRow(query, user.Text).Scan(
+			&userr.Id,
+			&userr.FirstName,
+			&userr.LastName,
+			&userr.Email,
+			&userr.Location,
+			&userr.Phone,
+		)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+	} else if user.Search == "last_name" {
+		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE last_name  LIKE $1`
+		err := r.db.QueryRow(query, user.Text).Scan(
+			&userr.Id,
+			&userr.FirstName,
+			&userr.LastName,
+			&userr.Email,
+			&userr.Location,
+			&userr.Phone,
+		)
+		if err != nil {
+			return nil, err
+		}
+	} else if user.Search == "email" {
+		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE email  LIKE $1`
+		err := r.db.QueryRow(query, user.Text).Scan(
+			&userr.Id,
+			&userr.FirstName,
+			&userr.LastName,
+			&userr.Email,
+			&userr.Location,
+			&userr.Phone,
+		)
+		if err != nil {
+			return nil, err
+		}
+	} else if user.Search == "location" {
+		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE location  LIKE $1`
+		err := r.db.QueryRow(query, user.Text).Scan(
+			&userr.Id,
+			&userr.FirstName,
+			&userr.LastName,
+			&userr.Email,
+			&userr.Location,
+			&userr.Phone,
+		)
+		if err != nil {
+			return nil, err
+		}
+	} else if user.Search == "phone" {
+		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE phone  LIKE $1`
+		err := r.db.QueryRow(query, user.Text).Scan(
+			&userr.Id,
+			&userr.FirstName,
+			&userr.LastName,
+			&userr.Email,
+			&userr.Location,
+			&userr.Phone,
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &userr, nil
 }

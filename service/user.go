@@ -3,10 +3,11 @@ package service
 import (
 	"context"
 
-	"github.com/jmoiron/sqlx"
 	pb "khusniddin/template-servise/genproto"
 	l "khusniddin/template-servise/pkg/logger"
 	"khusniddin/template-servise/storage"
+
+	"github.com/jmoiron/sqlx"
 )
 
 //UserService ...
@@ -55,6 +56,14 @@ func (s *UserService) DeleteUser(ctx context.Context, req *pb.User) (*pb.Xabar, 
 
 func (s *UserService) UpdateUser(ctx context.Context, req *pb.User) (*pb.Xabar, error) {
 	res, err := s.storage.User().UpdateUser(req)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *UserService) Search(ctx context.Context, req *pb.SearchUser) (*pb.User, error) {
+	res, err := s.storage.User().Search(req)
 	if err != nil {
 		return nil, err
 	}

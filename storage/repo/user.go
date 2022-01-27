@@ -11,4 +11,5 @@ type UserStorageI interface {
 	GetUser(*pb.User) (*pb.User, error)
 	DeleteUser(*pb.User) (*pb.Xabar, error)
 	UpdateUser(*pb.User) (*pb.Xabar, error)
+	Search(*pb.SearchUser) (*pb.User, error)
 }
