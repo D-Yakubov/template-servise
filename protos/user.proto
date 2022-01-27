@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package user;
+
+service UserService {
+    rpc Create(User) returns (User);
+    rpc ListUsers(ListUserRequest) returns (ListUserResponse);
+    rpc GetUser(User) returns (User);
+    rpc DeleteUser(User) returns (Xabar);
+    rpc UpdateUser(User) returns (Xabar);
+}
+
+message User {
+    int64  id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    string location = 5;
+    string phone = 6;
+}
+
+message ListUserRequest {
+    int64 limit = 1;
+    int64 page = 2;
+}
+message Xabar {
+    string message = 1;
+}
+message ListUserResponse {
+    repeated User user = 1;
+    int64 all = 2;
+}
