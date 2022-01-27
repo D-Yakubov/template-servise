@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/jmoiron/sqlx"
     _ "github.com/lib/pq" //postgres drivers
-    "github.com/rustagram/template-service/config"
+    "khusniddin/template-servise/config"
 )
 
 func ConnectToDB(cfg config.Config) (*sqlx.DB, error) {

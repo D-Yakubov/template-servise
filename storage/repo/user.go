@@ -1,7 +1,7 @@
 package repo
 
 import (
-	pb "github.com/rustagram/template-service/genproto"
+	pb "khusniddin/template-servise/genproto"
 )
 
 //UserStorageI ...

@@ -2,8 +2,8 @@ package storage
 
 import (
     "github.com/jmoiron/sqlx"
-    "github.com/rustagram/template-service/storage/postgres"
-    "github.com/rustagram/template-service/storage/repo"
+    "khusniddin/template-servise/storage/postgres"
+    "khusniddin/template-servise/storage/repo"
 )
 
 //IStorage ...

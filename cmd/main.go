@@ -3,11 +3,12 @@ package main
 import (
 	"net"
 
-	"github.com/rustagram/template-service/config"
-	pb "github.com/rustagram/template-service/genproto"
-	"github.com/rustagram/template-service/pkg/db"
-	"github.com/rustagram/template-service/pkg/logger"
-	"github.com/rustagram/template-service/service"
+	"khusniddin/template-servise/config"
+	pb "khusniddin/template-servise/genproto"
+	"khusniddin/template-servise/pkg/db"
+	"khusniddin/template-servise/pkg/logger"
+	"khusniddin/template-servise/service"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

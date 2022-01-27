@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	pb "github.com/rustagram/template-service/genproto"
-	l "github.com/rustagram/template-service/pkg/logger"
-	"github.com/rustagram/template-service/storage"
+	pb "khusniddin/template-servise/genproto"
+	l "khusniddin/template-servise/pkg/logger"
+	"khusniddin/template-servise/storage"
 )
 
 //UserService ...

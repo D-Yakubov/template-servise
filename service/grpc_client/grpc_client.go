@@ -1,7 +1,7 @@
 package grpcClient
 
 import (
-    "github.com/rustagram/template-service/config"
+    "khusniddin/template-servise/config"
 )
 
 //GrpcClientI ...
