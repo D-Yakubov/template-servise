@@ -17,7 +17,11 @@ message User {
     string last_name = 3;
     string email = 4;
     string location = 5;
-    string phone = 6;
+    repeated Phone phone = 6;
+}
+message Phone {
+    string phone_type = 1;
+    string num =2;
 }
 message SearchUser {
     string search = 1;

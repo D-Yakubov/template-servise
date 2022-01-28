@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"encoding/json"
 	"fmt"
 	pb "khusniddin/template-servise/genproto"
 
@@ -25,18 +26,25 @@ func (r *userRepo) Create(user *pb.User) (*pb.User, error) {
         phone) 
         VALUES($1,$2,$3,$4,$5)
         RETURNING id,first_name,last_name,email,location,phone`
-	err := r.db.QueryRow(query, user.FirstName, user.LastName, user.Email, user.Location, user.Phone).Scan(
+	res, err := json.Marshal(user.Phone)
+	if err != nil {
+		return nil, err
+	}
+	err = r.db.QueryRow(query, user.FirstName, user.LastName, user.Email, user.Location, res).Scan(
 		&user.Id,
 		&user.FirstName,
 		&user.LastName,
 		&user.Email,
 		&user.Location,
-		&user.Phone,
+		&res,
 	)
 	if err != nil {
 		return nil, err
 	}
-
+	err = json.Unmarshal(res, &user.Phone)
+	if err != nil {
+		return nil, err
+	}
 	return user, nil
 }
 
@@ -79,14 +87,19 @@ func (r *userRepo) ListUsers(list *pb.ListUserRequest) (*pb.ListUserResponse, er
 }
 
 func (r *userRepo) GetUser(user *pb.User) (*pb.User, error) {
+	var byt []byte
 	query := `SELECT first_name,last_name,email,location,phone FROM users WHERE id=$1`
 	err := r.db.QueryRow(query, user.Id).Scan(
 		&user.FirstName,
 		&user.LastName,
 		&user.Email,
 		&user.Location,
-		&user.Phone,
+		&byt,
 	)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(byt, &user.Phone)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +116,11 @@ func (r *userRepo) DeleteUser(user *pb.User) (*pb.Xabar, error) {
 
 func (r *userRepo) UpdateUser(user *pb.User) (*pb.Xabar, error) {
 	query := `UPDATE users SET first_name=$1, last_name=$2, email=$3, location=$4, phone=$5 WHERE id=$6`
-	_, err := r.db.Exec(query, user.FirstName, user.LastName, user.Email, user.Location, user.Phone, user.Id)
+	byt, err := json.Marshal(user.Phone)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.db.Exec(query, user.FirstName, user.LastName, user.Email, user.Location, byt, user.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -114,6 +131,7 @@ func (r *userRepo) Search(user *pb.SearchUser) (*pb.User, error) {
 	userr := pb.User{}
 	user.Text += "%"
 	if user.Search == "first_name" {
+		var byt []byte
 		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE first_name  LIKE $1`
 		err := r.db.QueryRow(query, user.Text).Scan(
 			&userr.Id,
@@ -121,13 +139,18 @@ func (r *userRepo) Search(user *pb.SearchUser) (*pb.User, error) {
 			&userr.LastName,
 			&userr.Email,
 			&userr.Location,
-			&userr.Phone,
+			&byt,
 		)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
+		err = json.Unmarshal(byt, &userr.Phone)
+		if err != nil {
+			return nil, err
+		}
 	} else if user.Search == "last_name" {
+		var byt []byte
 		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE last_name  LIKE $1`
 		err := r.db.QueryRow(query, user.Text).Scan(
 			&userr.Id,
@@ -135,12 +158,17 @@ func (r *userRepo) Search(user *pb.SearchUser) (*pb.User, error) {
 			&userr.LastName,
 			&userr.Email,
 			&userr.Location,
-			&userr.Phone,
+			&byt,
 		)
 		if err != nil {
 			return nil, err
 		}
+		err = json.Unmarshal(byt, &userr.Phone)
+		if err != nil {
+			return nil, err
+		}
 	} else if user.Search == "email" {
+		var byt []byte
 		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE email  LIKE $1`
 		err := r.db.QueryRow(query, user.Text).Scan(
 			&userr.Id,
@@ -148,12 +176,17 @@ func (r *userRepo) Search(user *pb.SearchUser) (*pb.User, error) {
 			&userr.LastName,
 			&userr.Email,
 			&userr.Location,
-			&userr.Phone,
+			&byt,
 		)
 		if err != nil {
 			return nil, err
 		}
+		err = json.Unmarshal(byt, &userr.Phone)
+		if err != nil {
+			return nil, err
+		}
 	} else if user.Search == "location" {
+		var byt []byte
 		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE location  LIKE $1`
 		err := r.db.QueryRow(query, user.Text).Scan(
 			&userr.Id,
@@ -161,21 +194,12 @@ func (r *userRepo) Search(user *pb.SearchUser) (*pb.User, error) {
 			&userr.LastName,
 			&userr.Email,
 			&userr.Location,
-			&userr.Phone,
+			&byt,
 		)
 		if err != nil {
 			return nil, err
 		}
-	} else if user.Search == "phone" {
-		query := `SELECT id,first_name,last_name,email,location,phone FROM users WHERE phone  LIKE $1`
-		err := r.db.QueryRow(query, user.Text).Scan(
-			&userr.Id,
-			&userr.FirstName,
-			&userr.LastName,
-			&userr.Email,
-			&userr.Location,
-			&userr.Phone,
-		)
+		err = json.Unmarshal(byt, &userr.Phone)
 		if err != nil {
 			return nil, err
 		}
