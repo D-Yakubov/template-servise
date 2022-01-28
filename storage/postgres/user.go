@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"encoding/json"
-	"fmt"
 	pb "khusniddin/template-servise/genproto"
 
 	"github.com/jmoiron/sqlx"
@@ -49,6 +48,7 @@ func (r *userRepo) Create(user *pb.User) (*pb.User, error) {
 }
 
 func (r *userRepo) ListUsers(list *pb.ListUserRequest) (*pb.ListUserResponse, error) {
+	var byt []byte
 	offset := (list.Page - 1) * list.Limit
 	query := `SELECT
         id,
@@ -75,8 +75,12 @@ func (r *userRepo) ListUsers(list *pb.ListUserRequest) (*pb.ListUserResponse, er
 			&user.LastName,
 			&user.Email,
 			&user.Location,
-			&user.Phone,
+			&byt,
 		)
+		if err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal(byt, &user.Phone)
 		if err != nil {
 			return nil, err
 		}
@@ -142,7 +146,6 @@ func (r *userRepo) Search(user *pb.SearchUser) (*pb.User, error) {
 			&byt,
 		)
 		if err != nil {
-			fmt.Println(err)
 			return nil, err
 		}
 		err = json.Unmarshal(byt, &userr.Phone)
