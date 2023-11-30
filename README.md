@@ -1,3 +1,2 @@
 # template-servise
-Template for our practice in Go
-This is a simple template service project for Go
+This is a simple template service project, which is written in Golang programming language.
